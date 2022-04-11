@@ -16,7 +16,17 @@ public class Main {
                 int i = 0;
                 boolean wrong = true;
                 while (i++ < 6 && wrong) {
-                    int guess = in.nextInt();
+                    boolean valid = false;
+                    int guess = 0;
+                    while(!valid) { //enforce numeric input
+                        String input = in.nextLine();
+                        try {
+                            guess = Integer.parseInt(input);
+                            valid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Guess a number between 1 and 20!");
+                        }
+                    }
                     if (guess < num) {
                         System.out.println("Your guess is too low. Try again." +
                                 "\n You have " + (6 - i) + " guess(es) remaining.");
