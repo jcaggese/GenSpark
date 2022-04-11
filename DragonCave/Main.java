@@ -21,6 +21,8 @@ public class Main {
                 System.out.println("Gobbles you down in one bite!");
             else
                 System.out.println("Politely offers you some of his treasure.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
