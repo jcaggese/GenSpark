@@ -1,5 +1,3 @@
-package genspark.projects.GenSpark.GuessTheNumber;
-
 import java.util.Random;
 import java.util.Scanner;
 

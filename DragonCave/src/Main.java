@@ -1,5 +1,3 @@
-package genspark.projects.GenSpark.DragonCave;
-
 import java.util.Scanner;
 
 public class Main {
