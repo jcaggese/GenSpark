@@ -16,7 +16,7 @@ public class Main {
     /**
      * @return User response, cave 1 or 2
      */
-    private static String fetchResponse() {
+    public static String fetchResponse() {
         String response = "1";
         try (Scanner in = new Scanner(System.in)) {
             response = in.nextLine();
@@ -36,7 +36,7 @@ public class Main {
      * @param response User generated response, 1 or 2
      * @return String representing win state.
      */
-    private static String generateOutcome(String response) {
+    public static String generateOutcome(String response) {
         if (response.equals("1"))
             return "Gobbles you down in one bite!";
         else

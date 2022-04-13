@@ -25,7 +25,7 @@ public class Main {
      * @param in Scanner to generate user input
      * @return a number between 1 and 20
      */
-    private static int getNumericInput(Scanner in) {
+    public static int getNumericInput(Scanner in) {
         boolean valid = false;
         int guess = -1;
         while(!valid) { //enforce numeric input
@@ -71,7 +71,7 @@ public class Main {
      * @param in Scanner to get user input
      * @return True if user wants to play again, False if not
      */
-    private static boolean playAgain(Scanner in) {
+    public static boolean playAgain(Scanner in) {
         while (true) {
             String again = in.nextLine();
             if (again.equals("Y") || again.equals("y")) {
