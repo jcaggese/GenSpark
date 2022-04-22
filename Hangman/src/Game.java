@@ -10,8 +10,30 @@ public class Game {
         player = new Player();
     }
 
-    public void play() {
+    /**
+     * Play loop for multiple games
+     */
+    public void playLoop() {
+        boolean play = true;
+        while (play) {
+            play();
+            char contInput;
+            do {
+                System.out.println("Would you like to play again? (y/n)");
+                contInput = player.getLetter(System.in);
+            } while(contInput != 'y' && contInput != 'n');
+            if (contInput == 'n')
+                play = false;
+        }
+        player.finish();
+    }
+
+    /**
+     * Main play flow (single game)
+     */
+    private void play() {
         String word = genWord();
+        HashSet<Character> correctGuesses = getLetters(word);
         HashSet<Character> guesses = new HashSet<>();
         int state = 0;
         boolean win = false;
@@ -19,20 +41,23 @@ public class Game {
         System.out.println("H A N G M A N");
         while (state < 6) {
             System.out.println(genDisplay(state));
-            getGuess(guesses);
-            System.out.println(displayGuesses(guesses));
             String guessCheck = genWordDisplay(word, guesses);
             System.out.println(guessCheck);
             if (guessCheck.indexOf('_') == -1) { // no blanks left, player wins
                 win = true;
                 break;
             }
-            state++;
+            char guess = getGuess(guesses);
+            if (!correctGuesses.contains(guess))
+                state++; //only advance lose state on incorrect guess
+            System.out.println(displayGuesses(guesses));
         }
         if (win)
             System.out.println("Congratulations, you won!");
-        else
-            System.out.println("RIP :(");
+        else {
+            System.out.println(genDisplay(6));
+            System.out.println("Oh no! You lose! The word was " + word + ".");
+        }
     }
 
     /**
@@ -89,7 +114,7 @@ public class Game {
      * Get a guess from a player and add it guesses. Do not allow user to give duplicate letters.
      * @param guesses
      */
-    private void getGuess(HashSet<Character> guesses) {
+    private char getGuess(HashSet<Character> guesses) {
         char guess;
         do {
             guess = player.getLetter(System.in);
@@ -97,6 +122,7 @@ public class Game {
                 System.out.println("You already guessed that letter!");
         } while (guesses.contains(guess));
         guesses.add(guess);
+        return guess;
     }
 
     /**
@@ -107,5 +133,16 @@ public class Game {
     private String displayGuesses(HashSet<Character> guesses) {
         String retStr = "Guesses: " + guesses;
         return retStr;
+    }
+
+    /**
+     * @param word Word to extract letters from
+     * @return set of correct guesses to check against
+     */
+    private HashSet<Character> getLetters(String word) {
+        HashSet<Character> letterSet = new HashSet<Character>();
+        for (int i = 0; i < word.length(); i++)
+            letterSet.add(word.charAt(i));
+        return letterSet;
     }
 }
