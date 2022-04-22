@@ -27,6 +27,7 @@ public class Game {
                 win = true;
                 break;
             }
+            state++;
         }
         if (win)
             System.out.println("Congratulations, you won!");
@@ -92,6 +93,8 @@ public class Game {
         char guess;
         do {
             guess = player.getLetter(System.in);
+            if (guesses.contains(guess))
+                System.out.println("You already guessed that letter!");
         } while (guesses.contains(guess));
         guesses.add(guess);
     }
