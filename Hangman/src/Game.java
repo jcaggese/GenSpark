@@ -33,7 +33,6 @@ public class Game {
      */
     private void play() {
         String word = genWord();
-        HashSet<Character> correctGuesses = getLetters(word);
         HashSet<Character> guesses = new HashSet<>();
         int state = 0;
         boolean win = false;
@@ -48,7 +47,7 @@ public class Game {
                 break;
             }
             char guess = getGuess(guesses);
-            if (!correctGuesses.contains(guess))
+            if (word.indexOf(guess) == -1)
                 state++; //only advance lose state on incorrect guess
             System.out.println(displayGuesses(guesses));
         }
