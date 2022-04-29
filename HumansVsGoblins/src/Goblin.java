@@ -9,7 +9,7 @@ public class Goblin extends Entity{
      * A goblin has 5 health and 3 strength.
      */
     public Goblin() {
-        health = 5;
+        health = 3;
         strength = 3;
     }
 
@@ -24,6 +24,6 @@ public class Goblin extends Entity{
     }
 
     public String toString() {
-        return "A vicious, snarling goblin with " + health + " and " + strength + " strength.";
+        return "A vicious, snarling goblin with " + health + " health and " + strength + " strength.";
     }
 }
