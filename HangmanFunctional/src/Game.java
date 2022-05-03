@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -6,9 +9,11 @@ public class Game {
     private String[] dictionary = {"cower", "lion", "wolf", "uncertainty", "daughter", "add", "retired", "conscious",
                                     "shed", "movement"};
     private Player player;
+    private String[] states;
 
     public Game() {
         player = new Player();
+        states = genStates();
     }
 
     /**
@@ -32,7 +37,7 @@ public class Game {
 
         System.out.println("H A N G M A N");
         while (state < 6) {
-            System.out.println(genDisplay(state));
+            System.out.println(states[state]);
             String guessCheck = genWordDisplay(word, guesses);
             System.out.println(guessCheck);
             if (guessCheck.indexOf('_') == -1) { // no blanks left, player wins
@@ -47,7 +52,7 @@ public class Game {
         if (win)
             System.out.println("Congratulations, you won!");
         else {
-            System.out.println(genDisplay(6));
+            System.out.println(states[6]);
             System.out.println("Oh no! You lose! The word was " + word + ".");
         }
 
@@ -64,29 +69,19 @@ public class Game {
     }
 
     /**
-     * @param state Loss state of the game
-     * @return A String defining a sysout display of the current game state
+     * Pull games states from a file
+     * @return array of states
      */
-    private String genDisplay(int state){
-        String disp = "";
-        disp += "+---+\n";
-        if (state > 0)
-            disp += " O";
-        disp += "\t|\n";
-        if (state == 2)
-            disp += " |";
-        else if (state > 2)
-            disp += "-|";
-        if (state > 3)
-            disp += "-";
-        disp += "\t|\n";
-        if (state > 4)
-            disp += "/";
-        if (state > 5)
-            disp += " \\";
-        disp += "\t|\n";
-        disp += "======\n";
-        return disp;
+    private String[] genStates() {
+        try {
+            return Files.lines(Paths.get("rsc/Hangman_States.txt"))
+                    .map(n->n.replaceAll("n", System.lineSeparator()))
+                    .toArray(String[]::new);
+        } catch (IOException e) {
+            System.err.println("Could not access games states.");
+            System.exit(1);
+        }
+        return null;
     }
 
     /**
