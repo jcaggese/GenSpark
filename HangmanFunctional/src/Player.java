@@ -19,7 +19,8 @@ public class Player {
         char letter;
         in = new BufferedReader(new InputStreamReader(source));
         try {
-            letter = in.lines().map(n -> n.charAt(0))
+            letter = in.lines().filter(n -> !n.isBlank())
+                    .map(n -> n.charAt(0))
                     .filter(n -> {
                         if (Character.isLetter(n))
                             return true;
@@ -30,7 +31,6 @@ public class Player {
                     })
                     .findFirst().orElse('A');
         } catch (Exception e) {
-            e.printStackTrace();
             System.err.println("Input Failed. Prediction: You guessed A.");
             letter = 'A';
         }

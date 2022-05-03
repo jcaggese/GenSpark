@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Game {
     private String[] dictionary = {"cower", "lion", "wolf", "uncertainty", "daughter", "add", "retired", "conscious",
@@ -11,27 +12,19 @@ public class Game {
     }
 
     /**
-     * Play loop for multiple games
+     * Ridiculous, hacky solution to maintain one while loop requirement that is supposed to exist
+     * in main play method while also maintaining replayability functionality from original game.
      */
-    public void playLoop() {
-        boolean play = true;
-        while (play) {
-            play();
-            char contInput;
-            do {
-                System.out.println("Would you like to play again? (y/n)");
-                contInput = player.getLetter(System.in);
-            } while(contInput != 'y' && contInput != 'n');
-            if (contInput == 'n')
-                play = false;
-        }
-        player.finish();
+    public void playLoop(){
+        Stream.generate(() -> play())
+                .filter(n->n==false).findFirst();
     }
 
     /**
      * Main play flow (single game)
+     * @return True if the user wants to play again
      */
-    private void play() {
+    private boolean play() {
         String word = genWord();
         HashSet<Character> guesses = new HashSet<>();
         int state = 0;
@@ -56,6 +49,17 @@ public class Game {
         else {
             System.out.println(genDisplay(6));
             System.out.println("Oh no! You lose! The word was " + word + ".");
+        }
+
+        System.out.println("Would you like to play again? (y/n)");
+        char play = Stream.generate(() -> player.getLetter(System.in))
+                .filter(n->n=='y'||n=='n').findFirst().orElse('n');
+        if (play == 'y') {
+            return true;
+        } else {
+            System.out.println("Thanks for playing!");
+            player.finish();
+            return false;
         }
     }
 
@@ -99,14 +103,12 @@ public class Game {
      * @return a string representation of revealed letters
      */
     private String genWordDisplay(String word, HashSet<Character> guesses) {
-        String disp = "";
-        for (int i = 0; i < word.length(); i++) {
-            if (guesses.contains(word.charAt(i)))
-                disp += " " + word.charAt(i) + " ";
+        return Stream.of(word.split("")).map(n->{
+            if (guesses.contains(n.charAt(0)))
+                return " " + n + " ";
             else
-                disp += " _ ";
-        }
-        return disp;
+                return " _ ";
+        }).reduce(String::concat).orElse("");
     }
 
     /**
@@ -114,12 +116,14 @@ public class Game {
      * @param guesses
      */
     private char getGuess(HashSet<Character> guesses) {
-        char guess;
-        do {
-            guess = player.getLetter(System.in);
-            if (guesses.contains(guess))
-                System.out.println("You already guessed that letter!");
-        } while (guesses.contains(guess));
+        char guess = Stream.generate(() -> player.getLetter(System.in))
+                .filter(n->{
+                    if (!guesses.contains(n))
+                        return true;
+                    else {
+                        System.out.println("You already guessed that letter");
+                        return false;
+                    }}).findFirst().orElse('a');
         guesses.add(guess);
         return guess;
     }
@@ -132,16 +136,5 @@ public class Game {
     private String displayGuesses(HashSet<Character> guesses) {
         String retStr = "Guesses: " + guesses;
         return retStr;
-    }
-
-    /**
-     * @param word Word to extract letters from
-     * @return set of correct guesses to check against
-     */
-    private HashSet<Character> getLetters(String word) {
-        HashSet<Character> letterSet = new HashSet<Character>();
-        for (int i = 0; i < word.length(); i++)
-            letterSet.add(word.charAt(i));
-        return letterSet;
     }
 }
