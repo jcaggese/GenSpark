@@ -5,9 +5,14 @@ import java.io.InputStreamReader;
 
 public class Player {
     private BufferedReader in;
+    private String name;
 
     public Player() {
+        promptName();
+    }
 
+    public Player(String name) {
+        this.name = name;
     }
 
     /**
@@ -35,6 +40,27 @@ public class Player {
             letter = 'A';
         }
         return Character.toLowerCase(letter);
+    }
+
+    /**
+     * Prompts the user for a name
+     */
+    private void promptName() {
+        System.out.println("Enter player name: ");
+        try {
+            in = new BufferedReader(new InputStreamReader(System.in));
+            name = in.readLine();
+        } catch (IOException e) {
+            System.err.println("Could not retrieve name. Your name is Greg now.");
+            name = "greg.";
+        }
+    }
+
+    /**
+     * @return String name
+     */
+    public String getName() {
+        return name;
     }
 
     /**

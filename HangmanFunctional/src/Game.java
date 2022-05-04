@@ -1,5 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Random;
@@ -10,10 +12,12 @@ public class Game {
                                     "shed", "movement"};
     private Player player;
     private String[] states;
+    private int score;
 
     public Game() {
         player = new Player();
         states = genStates();
+        score = 0;
     }
 
     /**
@@ -49,11 +53,16 @@ public class Game {
                 state++; //only advance lose state on incorrect guess
             System.out.println(displayGuesses(guesses));
         }
-        if (win)
-            System.out.println("Congratulations, you won!");
+        if (win) {
+            System.out.println("Congratulations, you won! Your current streak is: " + ++score);
+        }
         else {
             System.out.println(states[6]);
             System.out.println("Oh no! You lose! The word was " + word + ".");
+            System.out.println();
+            System.out.println("Your score is " + score);
+            System.out.println(checkHighScore(score));
+            score = 0;
         }
 
         System.out.println("Would you like to play again? (y/n)");
@@ -62,6 +71,8 @@ public class Game {
         if (play == 'y') {
             return true;
         } else {
+            if (win)
+                System.out.println(checkHighScore(score));
             System.out.println("Thanks for playing!");
             player.finish();
             return false;
@@ -131,5 +142,36 @@ public class Game {
     private String displayGuesses(HashSet<Character> guesses) {
         String retStr = "Guesses: " + guesses;
         return retStr;
+    }
+
+    /**
+     * Checks a score to see if it is a high score.
+     * Updates high score file if user got the high score.
+     * @param score
+     * @return Message indicating what the high score is
+     */
+    private String checkHighScore(int score) {
+        try {
+            Path file = Paths.get("rsc/high_scores.txt");
+            if (Files.notExists(file)) {
+                BufferedWriter write = Files.newBufferedWriter(file);
+                write.write(player.getName()+ "," + score);
+                write.close();
+                return "Congratulations, you have the high score!";
+            }
+            else {
+                String[] highScore = Files.lines(file).findFirst().orElse(",").split(",");
+                if (score < Integer.parseInt(highScore[1]))
+                    return "The current high score is " + highScore[1] + " belonging to " + highScore[0] + ".";
+                else {
+                    BufferedWriter write = Files.newBufferedWriter(file);
+                    write.write(player.getName() + "," + score);
+                    write.close();
+                    return "Congratulations, you have the high score!";
+                }
+            }
+        } catch (Exception e) {
+            return "Could not retrieve high scores.";
+        }
     }
 }
