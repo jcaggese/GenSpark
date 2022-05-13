@@ -3,6 +3,7 @@ package com.example.humansvsgoblinsgui;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GUI extends Application {
+    Game game;
     // Give this game's instance of Map
     // actually probably just give this an instance of game and take everything from there
     // start with a basic map and see how things look, then add more functionality
@@ -24,7 +26,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Game game = new Game();
+        game = new Game();
         Map map = game.getMap();
 
         BorderPane root = new BorderPane();
@@ -34,10 +36,17 @@ public class GUI extends Application {
         updateMap(gameView, map);
         gameView.setGridLinesVisible(true);
 
-        root.setTop(new Text("Goblins VS Humans"));
+        VBox combatLog = new VBox();
+        updateCBLog(combatLog, map.getPlayer());
+        combatLog.setPrefWidth(1500);
+        combatLog.setAlignment(Pos.CENTER_LEFT);
+
+        Text title = new Text("Goblins VS Humans");
+        root.setTop(title);
+        root.setAlignment(title, Pos.TOP_CENTER);
         root.setCenter(gameView);
-        root.setBottom(new Text("Status"));
-        root.setRight(new Text("Combat Info"));
+        root.setRight(combatLog);
+        root.setMargin(combatLog, new Insets(0,0,0,20));
         //stack pane on each tile node
         Scene scene = new Scene(root, 800, 800, Color.GRAY);
 
@@ -53,6 +62,7 @@ public class GUI extends Application {
                 else if (keyEvent.getCode().equals(KeyCode.LEFT))
                     game.playerMove("W");
                 updateMap(gameView, map);
+                updateCBLog(combatLog, map.getPlayer());
                 if (!game.checkForGoblins()) {
                     HBox end = new HBox();
                     Text poopoo = new Text("YOU WIN :)");
@@ -86,5 +96,13 @@ public class GUI extends Application {
                 gameView.add(pane,j,i);
             }
         }
+    }
+
+    public void updateCBLog(VBox view, Human player) {
+        view.getChildren().clear();
+        view.getChildren().add(new Text("COMBAT LOG"));
+        view.getChildren().add(new Text("Health: " + player.getHealth()));
+        view.getChildren().add(new Text("Strength: " + player.getStrength()));
+        view.getChildren().add(new Text(game.getStatus()));
     }
 }

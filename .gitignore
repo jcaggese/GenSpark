@@ -1,2 +1,4 @@
 *.iml
 .idea/
+*.class
+HumansVsGoblinsGUI/target/classes/com/example/humansvsgoblinsgui/hello-view.fxml

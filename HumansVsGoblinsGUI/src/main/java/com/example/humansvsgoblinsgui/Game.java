@@ -10,10 +10,12 @@ public class Game {
     private Scanner in;
     private Map map;
     private Human player;
+    private String status;
 
     public Game(){
         map = new Map();
         player = map.getPlayer();
+        status = "Use arrow keys to move.";
     }
 
     /**
@@ -148,8 +150,10 @@ public class Game {
                         break;
             default:    return false;
         }
-        if (map.moveEntity(playerLoc[0], playerLoc[1], toX, toY)) //tile was empty
+        if (map.moveEntity(playerLoc[0], playerLoc[1], toX, toY)) { //tile was empty
+            status = "";
             return false;
+        }
         else { //tile inhabited by something
             if (map.getMap()[toX][toY] instanceof Goblin) { //initiate combat
                 Goblin enemy = (Goblin) map.getMap()[toX][toY];
@@ -158,18 +162,18 @@ public class Game {
                 int playerHealth = player.getHealth();
                 player.combat(enemy);
                 if (enemy.getHealth() < 1) {
-                    System.out.println("You defeated the " + enemy.getClass().getCanonicalName() + ".");
+                    status = "You defeated the " + enemy.getClass().getSimpleName() + ".";
                     map.remove(toX, toY);
                 } else {
-                    System.out.println("You attack the " + enemy.getClass().getCanonicalName() + " for " +
-                            (enemyHealth - enemy.getHealth()) + " damage.");
-                    System.out.println("...but it survives with " + enemy.getHealth() + " health remaining!");
-                    System.out.println("The " + enemy.getClass().getCanonicalName() + " attacks you back for " +
-                                     (playerHealth - player.getHealth()) + " damage.");
+                    status = "You attack the " + enemy.getClass().getSimpleName() + " for " +
+                            (enemyHealth - enemy.getHealth()) + " damage.\n" +
+                            "...but it survives with " + enemy.getHealth() + " health remaining!\n" +
+                            "The " + enemy.getClass().getSimpleName() + " attacks you back for " +
+                                     (playerHealth - player.getHealth()) + " damage.";
                 }
                 return false;
             } else { //non interactable tile
-                System.out.println("You can't move here! Something is in the way!");
+                status = "You can't move here! Something is in the way!";
                 return true;
             }
         }
@@ -177,5 +181,9 @@ public class Game {
 
     public Map getMap() {
         return map;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
