@@ -2,3 +2,8 @@
 .idea/
 *.class
 HumansVsGoblinsGUI/target/classes/com/example/humansvsgoblinsgui/hello-view.fxml
+HumansVsGoblinsGUI/target/classes/tiles/TileXWall.jpg
+HumansVsGoblinsGUI/target/classes/tiles/TileHWall.jpg
+HumansVsGoblinsGUI/target/classes/tiles/TileVWall.jpg
+HumansVsGoblinsGUI/target/classes/tiles/DungeonTile1.jpg
+HumansVsGoblinsGUI/target/classes/tiles/BrickPattern.jpg

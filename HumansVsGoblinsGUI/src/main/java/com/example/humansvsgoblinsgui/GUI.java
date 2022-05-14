@@ -6,19 +6,33 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class GUI extends Application {
     Game game;
+    String gameFont = "Sylfaen";
+    ImagePattern tile;
+    ImagePattern borderSide;
+    ImagePattern borderTop;
+    ImagePattern borderCorner;
+
     // Give this game's instance of Map
     // actually probably just give this an instance of game and take everything from there
     // start with a basic map and see how things look, then add more functionality
@@ -28,6 +42,18 @@ public class GUI extends Application {
     public void start(Stage stage) throws IOException {
         game = new Game();
         Map map = game.getMap();
+        tile = new ImagePattern(new Image(
+                Files.newInputStream(Paths.get("src/main/resources/tiles/DungeonTile1.jpg"))));
+        ImagePattern background = new ImagePattern(new Image(
+                Files.newInputStream(Paths.get("src/main/resources/tiles/BrickPattern.jpg"))));
+        borderSide = new ImagePattern(new Image(
+                Files.newInputStream(Paths.get("src/main/resources/tiles/TileVWall.jpg"))));
+        borderTop = new ImagePattern(new Image(
+                Files.newInputStream(Paths.get("src/main/resources/tiles/TileHWall.jpg"))));
+        borderCorner = new ImagePattern(new Image(
+                Files.newInputStream(Paths.get("src/main/resources/tiles/TileXwall.jpg"))));
+
+
 
         BorderPane root = new BorderPane();
 
@@ -36,19 +62,36 @@ public class GUI extends Application {
         updateMap(gameView, map);
         gameView.setGridLinesVisible(true);
 
+        VBox cbLogContainer = new VBox();
+        VBox cbLogBufferTop = new VBox();
+        HBox cbLogContainerMid = new HBox();
         VBox combatLog = new VBox();
+        HBox cblRightBuffer = new HBox();
+        cbLogContainerMid.getChildren().addAll(combatLog, cblRightBuffer);
+        VBox cbLogBufferBot = new VBox();
+        cbLogBufferTop.setMinHeight(100);
+        cbLogBufferBot.setMinHeight(100);
+        cblRightBuffer.setMinWidth(25);
+        cbLogContainer.getChildren().addAll(cbLogBufferTop,cbLogContainerMid,cbLogBufferBot);
         updateCBLog(combatLog, map.getPlayer());
-        combatLog.setPrefWidth(1500);
-        combatLog.setAlignment(Pos.CENTER_LEFT);
+        combatLog.setPrefWidth(300);
+        combatLog.setMinHeight(150);
+        combatLog.setAlignment(Pos.CENTER);
+        combatLog.setBackground(new Background(new BackgroundFill(Color.BLACK,null,null)));
 
-        Text title = new Text("Goblins VS Humans");
+        Text title = new Text("Goblins Vs Humans");
+        title.setFont(Font.font(gameFont,60));
+        title.setFill(Color.GOLD);
+        title.setStroke(Color.BLACK);
+        title.setStrokeWidth(0.5);
+
         root.setTop(title);
-        root.setAlignment(title, Pos.TOP_CENTER);
+        root.setAlignment(title, Pos.CENTER);
+        root.setMargin(title, new Insets(25,0,0,0));
         root.setCenter(gameView);
-        root.setRight(combatLog);
-        root.setMargin(combatLog, new Insets(0,0,0,20));
-        //stack pane on each tile node
-        Scene scene = new Scene(root, 800, 800, Color.GRAY);
+        root.setRight(cbLogContainer);
+
+        Scene scene = new Scene(root, 900, 600, background);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -67,14 +110,15 @@ public class GUI extends Application {
                     HBox end = new HBox();
                     Text poopoo = new Text("YOU WIN :)");
                     end.getChildren().add(poopoo);
-                    Scene endScene = new Scene(end, scene.getHeight(), scene.getWidth(), Color.GRAY);
+                    Scene endScene = new Scene(end, scene.getHeight(), scene.getWidth(), background);
                     stage.setScene(endScene);
                 }
             }
         });
 
-        stage.setTitle("Layout Testing");
+        stage.setTitle("Goblins Vs Humans");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -86,13 +130,30 @@ public class GUI extends Application {
         int size = map.getSize();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                StackPane pane = new StackPane(new Rectangle(48,48, Color.AQUAMARINE));
+                StackPane pane = new StackPane();
+                if (map.getMap()[i][j] instanceof Character) {
+                    Character symbol = (Character) map.getMap()[i][j];
+                    if (symbol == Map.corner)
+                        pane.getChildren().add(new Rectangle(48, 48, borderCorner));
+                    else if (symbol == Map.borderSide)
+                        pane.getChildren().add(new Rectangle(48, 48, borderSide));
+                    else if (symbol == Map.borderTop)
+                        pane.getChildren().add(new Rectangle(48, 48, borderTop));
+                    else
+                        pane.getChildren().add(new Rectangle(48, 48, tile));
+                } else
+                    pane.getChildren().add(new Rectangle(48, 48, tile));
                 if (map.getMap()[i][j] instanceof Goblin) { //entity
-                    pane.getChildren().add(new Text("G"));
-                } else if (map.getMap()[i][j] instanceof Human)
-                    pane.getChildren().add(new Text("H"));
-                else
-                    pane.getChildren().add(new Text(map.getMap()[i][j].toString()));
+                    Text goblin = new Text("\uD83D\uDC7A");
+                    goblin.setFont(Font.font("", 30));
+                    goblin.setFill(Color.GREENYELLOW);
+                    pane.getChildren().add(goblin);
+                } else if (map.getMap()[i][j] instanceof Human) {
+                    Text human = new Text("\uD83E\uDDD9\u200D♂️");
+                    human.setFont(Font.font("", 30));
+                    human.setFill(Color.CORNFLOWERBLUE);
+                    pane.getChildren().add(human);
+                }
                 gameView.add(pane,j,i);
             }
         }
@@ -100,9 +161,16 @@ public class GUI extends Application {
 
     public void updateCBLog(VBox view, Human player) {
         view.getChildren().clear();
-        view.getChildren().add(new Text("COMBAT LOG"));
+        Text logTitle = new Text("COMBAT LOG");
+        view.getChildren().add(logTitle);
         view.getChildren().add(new Text("Health: " + player.getHealth()));
         view.getChildren().add(new Text("Strength: " + player.getStrength()));
         view.getChildren().add(new Text(game.getStatus()));
+        view.getChildren().stream().forEach(n-> {
+            ((Text)n).setFont(new Font(gameFont, 15));
+            ((Text)n).setFill(Color.GOLD);
+            ((Text)n).setTextAlignment(TextAlignment.LEFT);
+        });
+        logTitle.setFont(Font.font(gameFont, FontWeight.BLACK, 30));
     }
 }
