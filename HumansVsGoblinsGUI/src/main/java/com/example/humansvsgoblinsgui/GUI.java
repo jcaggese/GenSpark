@@ -43,7 +43,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        game = new Game(5);
+        game = new Game();
         Map map = game.getMap();
         tile = new ImagePattern(new Image(
                 Files.newInputStream(Paths.get("src/main/resources/tiles/DungeonTile1.jpg"))));
@@ -200,7 +200,10 @@ public class GUI extends Application {
     private Scene createEndScene(boolean win) {
         Scene endScene;
         try {
-            endScene = new Scene(FXMLLoader.load(getClass().getResource("endScreen.fxml")),width, height);
+            if (win)
+                endScene = new Scene(FXMLLoader.load(getClass().getResource("endScreen.fxml")),width, height);
+            else
+                endScene = new Scene(FXMLLoader.load(getClass().getResource("endScreenFail.fxml")),width, height);
         } catch (IOException e) {
             System.err.println("Endscreen file not found.");
             HBox end = new HBox();
