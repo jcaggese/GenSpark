@@ -26,12 +26,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class GUI extends Application {
-    Game game;
-    String gameFont = "Sylfaen";
-    ImagePattern tile;
-    ImagePattern borderSide;
-    ImagePattern borderTop;
-    ImagePattern borderCorner;
+    private Game game;
+    private String gameFont = "Sylfaen";
+    private ImagePattern background;
+    private ImagePattern tile;
+    private ImagePattern borderSide;
+    private ImagePattern borderTop;
+    private ImagePattern borderCorner;
+    private final int height = 600;
+    private final int width = 900;
 
     // Give this game's instance of Map
     // actually probably just give this an instance of game and take everything from there
@@ -40,11 +43,11 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        game = new Game();
+        game = new Game(5);
         Map map = game.getMap();
         tile = new ImagePattern(new Image(
                 Files.newInputStream(Paths.get("src/main/resources/tiles/DungeonTile1.jpg"))));
-        ImagePattern background = new ImagePattern(new Image(
+        background = new ImagePattern(new Image(
                 Files.newInputStream(Paths.get("src/main/resources/tiles/BrickPattern.jpg"))));
         borderSide = new ImagePattern(new Image(
                 Files.newInputStream(Paths.get("src/main/resources/tiles/TileVWall.jpg"))));
@@ -55,6 +58,57 @@ public class GUI extends Application {
 
 
 
+        Scene scene = createMainScene(map);
+
+        stage.setTitle("Goblins Vs Humans");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
+
+    /**
+     * Updates map view in center of screen according to current map state
+     * @param gameView
+     * @param map
+     */
+    public void updateMap(GridPane gameView, Map map){
+        int size = map.getSize();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                StackPane pane = new StackPane();
+                if (map.getMap()[i][j] instanceof Character) {
+                    Character symbol = (Character) map.getMap()[i][j];
+                    if (symbol == Map.corner)
+                        pane.getChildren().add(new Rectangle(48, 48, borderCorner));
+                    else if (symbol == Map.borderSide)
+                        pane.getChildren().add(new Rectangle(48, 48, borderSide));
+                    else if (symbol == Map.borderTop)
+                        pane.getChildren().add(new Rectangle(48, 48, borderTop));
+                    else
+                        pane.getChildren().add(new Rectangle(48, 48, tile));
+                } else
+                    pane.getChildren().add(new Rectangle(48, 48, tile));
+                if (map.getMap()[i][j] instanceof Goblin) { //entity
+                    Text goblin = new Text("\uD83D\uDC7A");
+                    goblin.setFont(Font.font("", 30));
+                    goblin.setFill(Color.GREENYELLOW);
+                    pane.getChildren().add(goblin);
+                } else if (map.getMap()[i][j] instanceof Human) {
+                    Text human = new Text("\uD83E\uDDD9\u200D♂️");
+                    human.setFont(Font.font("", 30));
+                    human.setFill(Color.CORNFLOWERBLUE);
+                    pane.getChildren().add(human);
+                }
+                gameView.add(pane,j,i);
+            }
+        }
+    }
+
+    private Scene createMainScene(Map map) {
         BorderPane root = new BorderPane();
 
         GridPane gameView = new GridPane();
@@ -91,7 +145,8 @@ public class GUI extends Application {
         root.setCenter(gameView);
         root.setRight(cbLogContainer);
 
-        Scene scene = new Scene(root, 900, 600, background);
+        Scene scene = new Scene(root, width, height);
+        root.setBackground(new Background(new BackgroundFill(background,null,null)));
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -107,58 +162,21 @@ public class GUI extends Application {
                 updateMap(gameView, map);
                 updateCBLog(combatLog, map.getPlayer());
                 if (!game.checkForGoblins()) {
-                    HBox end = new HBox();
-                    Text poopoo = new Text("YOU WIN :)");
-                    end.getChildren().add(poopoo);
-                    Scene endScene = new Scene(end, scene.getHeight(), scene.getWidth(), background);
-                    stage.setScene(endScene);
+                    ((Stage) scene.getWindow()).setScene(createEndScene(true));
+                } else if (map.getPlayer().getHealth() <= 0) {
+                    ((Stage) scene.getWindow()).setScene(createEndScene(false));
                 }
             }
         });
 
-        stage.setTitle("Goblins Vs Humans");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        return scene;
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
-
-    public void updateMap(GridPane gameView, Map map){
-        int size = map.getSize();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                StackPane pane = new StackPane();
-                if (map.getMap()[i][j] instanceof Character) {
-                    Character symbol = (Character) map.getMap()[i][j];
-                    if (symbol == Map.corner)
-                        pane.getChildren().add(new Rectangle(48, 48, borderCorner));
-                    else if (symbol == Map.borderSide)
-                        pane.getChildren().add(new Rectangle(48, 48, borderSide));
-                    else if (symbol == Map.borderTop)
-                        pane.getChildren().add(new Rectangle(48, 48, borderTop));
-                    else
-                        pane.getChildren().add(new Rectangle(48, 48, tile));
-                } else
-                    pane.getChildren().add(new Rectangle(48, 48, tile));
-                if (map.getMap()[i][j] instanceof Goblin) { //entity
-                    Text goblin = new Text("\uD83D\uDC7A");
-                    goblin.setFont(Font.font("", 30));
-                    goblin.setFill(Color.GREENYELLOW);
-                    pane.getChildren().add(goblin);
-                } else if (map.getMap()[i][j] instanceof Human) {
-                    Text human = new Text("\uD83E\uDDD9\u200D♂️");
-                    human.setFont(Font.font("", 30));
-                    human.setFill(Color.CORNFLOWERBLUE);
-                    pane.getChildren().add(human);
-                }
-                gameView.add(pane,j,i);
-            }
-        }
-    }
-
+    /**
+     * Updates combat log on right side of screen with relevant information to that turn
+     * @param view
+     * @param player
+     */
     public void updateCBLog(VBox view, Human player) {
         view.getChildren().clear();
         Text logTitle = new Text("COMBAT LOG");
@@ -172,5 +190,24 @@ public class GUI extends Application {
             ((Text)n).setTextAlignment(TextAlignment.LEFT);
         });
         logTitle.setFont(Font.font(gameFont, FontWeight.BLACK, 30));
+    }
+
+    /**
+     * Creates end game scene. Take win/loss as true or false.
+     * @param win
+     * @return
+     */
+    private Scene createEndScene(boolean win) {
+        Scene endScene;
+        try {
+            endScene = new Scene(FXMLLoader.load(getClass().getResource("endScreen.fxml")),width, height);
+        } catch (IOException e) {
+            System.err.println("Endscreen file not found.");
+            HBox end = new HBox();
+            Text poopoo = new Text("YOU WIN :)");
+            end.getChildren().add(poopoo);
+            endScene = new Scene(end, width, height);
+        }
+        return endScene;
     }
 }

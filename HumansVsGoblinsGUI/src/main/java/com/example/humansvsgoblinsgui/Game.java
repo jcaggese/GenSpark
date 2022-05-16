@@ -18,6 +18,12 @@ public class Game {
         status = "Use arrow keys to move.";
     }
 
+    public Game(int size){
+        map = new Map(size);
+        player = map.getPlayer();
+        status = "Use arrow keys to move.";
+    }
+
     /**
      * Play loop for multiple games
      */
