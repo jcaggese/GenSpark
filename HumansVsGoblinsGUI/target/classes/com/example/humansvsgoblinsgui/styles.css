@@ -1,0 +1,37 @@
+.root {
+    -fx-background-image: url("../../../tiles/EndBackground.jpg");
+    -fx-background-size: stretch;
+}
+
+.label {
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,1) , 1,1,0,0 );
+}
+
+#titleText {
+    -fx-font-size: 65px;
+    -fx-text-fill: white;
+    -fx-text-alignment: center;
+}
+
+#resultText {
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+}
+
+#playAgainText {
+    -fx-font-size: 20px;
+    -fx-text-fill: red;
+}
+
+.button {
+    -fx-background-color: #3c7fb1, linear-gradient(#fafdfe, #e8f5fc), linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 3,2,1;
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+}
+
+.button:hover {
+    -fx-background-color: blue;
+}

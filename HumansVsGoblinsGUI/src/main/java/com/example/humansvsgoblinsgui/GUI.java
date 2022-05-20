@@ -56,8 +56,6 @@ public class GUI extends Application {
         borderCorner = new ImagePattern(new Image(
                 Files.newInputStream(Paths.get("src/main/resources/tiles/TileXwall.jpg"))));
 
-
-
         Scene scene = createMainScene(map);
 
         stage.setTitle("Goblins Vs Humans");

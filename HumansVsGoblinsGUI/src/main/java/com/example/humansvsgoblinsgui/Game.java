@@ -1,13 +1,9 @@
 package com.example.humansvsgoblinsgui;
 
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-
 /**
  * Controls game flow
  */
 public class Game {
-    private Scanner in;
     private Map map;
     private Human player;
     private String status;
@@ -22,64 +18,6 @@ public class Game {
         map = new Map(size);
         player = map.getPlayer();
         status = "Use arrow keys to move.";
-    }
-
-    /**
-     * Play loop for multiple games
-     */
-    public void playLoop() {
-        try {
-            boolean play = true;
-            while (play) {
-                play();
-                char contInput;
-                do {
-                    System.out.println("Would you like to play again? (y/n)");
-                    contInput = in.next().toLowerCase().charAt(0);
-                } while (contInput != 'y' && contInput != 'n');
-                if (contInput == 'n')
-                    play = false;
-            }
-        } catch (Exception e) {
-            System.err.println("Error on replay. Oh well. Quitting.");
-            System.exit(1);
-        }
-    }
-
-    /**
-     * Control play flow for one iteration of the game
-     */
-    public void play() {
-        System.out.println("H U M A N S VS G O B L I N S");
-        System.out.println("You have fallen deep into a time lost dungeon brimming with vicious green monsters." +
-                "\nDefeat them all or perish.");
-        System.out.println("Controls: Type 'N', 'E', 'S', or 'W' to move that direction.");
-        System.out.println("Walk into a goblin to attack them.");
-
-        while (player.getHealth() > 0 && checkForGoblins()) {
-            System.out.println(map.toString());
-            System.out.println("Health: " + player.getHealth());
-
-            boolean needInput = true;
-            while (needInput) {
-                try {
-                    needInput = playerMove(in.next());
-                } catch (NoSuchElementException e) {
-                    System.out.println("Error occurred. Please input your move again.");
-                } catch (IllegalStateException e) {
-                    System.err.println("Fatal error occurred. System exit necessary.");
-                    System.exit(1);
-                }
-            }
-        }
-        if (player.getHealth() > 0) { //Player has won.
-            System.out.println("Congratulations! You survived the dungeon. You return to the surface with heaps" +
-                    "\n of treasure but also with knowledge no mortal man ought know.");
-        } else {
-            System.out.println("Oh no! You've met your doom in this foul dungeon. You will be forgotten to any man," +
-                    "\nto any time, forgotten to any god or devil, forgotten even to the dungeon, for any stuff or" +
-                    "\npart of you, even any scantling of your soul is you no more, but is now itself the dungeon!");
-        }
     }
 
     /**

@@ -12,7 +12,6 @@ public class EndScreenController {
 
     @FXML
     protected void playAgain() throws IOException {
-        System.out.println("Button clicked :)");
         GUI gui = new GUI();
         Stage parent = (Stage) button.getScene().getWindow();
         gui.start(parent);

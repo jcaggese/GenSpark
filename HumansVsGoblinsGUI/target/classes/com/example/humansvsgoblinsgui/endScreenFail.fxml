@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<?import java.net.URL?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          fx:controller="com.example.humansvsgoblinsgui.EndScreenController">
+<padding><Insets top ="25" right="25" bottom="10" left="25"/></padding>
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="850">
+        <Label  fx:id="titleText"
+                text="  You Died."/>
+    </HBox>
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="1" prefHeight="50"></HBox>
+    <Label  fx:id="resultText"
+            text="Oh no! You've met your doom in this foul dungeon. You will be forgotten to any man to any time, forgotten to any god or devil, forgotten even to the dungeon, for any stuff or part of you, even any scantling of your soul is you no more, but is now itself the dungeon!"
+            wrapText="true"
+            GridPane.columnIndex="0" GridPane.rowIndex="2"
+            GridPane.columnSpan="2"/>
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="50"></HBox>
+    <Label fx:id="playAgainText"
+            text="Would you like to play again?"
+            GridPane.columnIndex="0" GridPane.rowIndex="4"
+            GridPane.columnSpan="2" />
+    <Button fx:id="button" text="Play again." onAction="#playAgain"
+            GridPane.columnIndex="0" GridPane.rowIndex="5"
+            GridPane.columnSpan="2"/>
+
+    <stylesheets><URL value="@styles.css"/></stylesheets>
+</GridPane>
