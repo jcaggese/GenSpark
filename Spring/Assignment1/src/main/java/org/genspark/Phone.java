@@ -1,11 +1,6 @@
 package org.genspark;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-@Component
 public class Phone {
-    @Value("#{'123123123'}")
     private String mob;
 
     public Phone() {
