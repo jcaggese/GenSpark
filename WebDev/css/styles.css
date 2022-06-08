@@ -25,3 +25,15 @@ body {
 input {
     width: 50%;
 }
+
+ul {
+    list-style: none;
+    background-color:rgb(42, 58, 148);
+    width: 40%;
+    padding: 1px 20px 5px;
+}
+
+li {
+    margin: 10px 20px;
+    overflow-wrap: break-word;
+}
