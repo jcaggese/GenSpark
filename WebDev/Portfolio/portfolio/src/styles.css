@@ -1,5 +1,10 @@
 body {
   background-color: rgb(49, 44, 42);
+  color: white;
+}
+
+.main {
+  display: flex;
 }
 
 h1 {
@@ -10,33 +15,48 @@ h1 {
   border: 10px;
 }
 
-div {
-  border: 10px black wavy;
-  background-color: white;
-}
-
 .container {
   background-color: blue;
 }
 
 .bio-tile {
   width: 15%;
-  background-color: green;
+  height: 20%;
+  background-color: rgb(22, 87, 22);
   text-align: center;
-  margin: 1%;
+  margin-top: 10%;
+  margin-left: 12%;
 }
 
 .bio-tile img {
-  padding: 4%;
   align-content: center;
-  display: block;
   width: 90%;
+  border-color:rgb(49, 44, 42);
   border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
   margin: auto;
+  margin-top: 4%;
 }
 
 .bio-tile ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.project-tile {
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-align:center;
+}
+
+.project {
+  padding-top: 2%;
+  background-color:brown;
+}
+
+.project img{
+  width: 50%;
 }
