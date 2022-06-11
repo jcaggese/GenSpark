@@ -21,6 +21,7 @@ h1 {
 
 h2 {
   font-size: 3rem;
+  padding-bottom: 1%;
 }
 
 h4 {
@@ -28,12 +29,11 @@ h4 {
 }
 
 .bio-tile {
-  position: relative;
+  position: fixed;
   width: 15%;
-  height: 20%;
   background-color: rgb(34, 77, 34);
   text-align: center;
-  margin-top: 10%;
+  margin-top: 8%;
   margin-left: 12%;
   box-shadow: 5px 5px 20px black;
 }
@@ -57,7 +57,7 @@ h4 {
 
 .project-tile {
   margin-top: 5%;
-  margin-left: 5%;
+  margin-left: 35%;
   margin-right: 5%;
   text-align:center;
 }
@@ -67,8 +67,8 @@ h4 {
 }
 
 .project img{
-  width: 50%;
-  height: 50%;
+  max-width: 250px;
+  max-height: 250px;
 }
 
 .proj-desc{
