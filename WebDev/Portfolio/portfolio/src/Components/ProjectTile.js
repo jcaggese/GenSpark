@@ -17,6 +17,11 @@ export default function ProjectTile() {
                     <Project title="Project" description="description" imgURL="images/Head.jpg"/>
                     <Project title="Project" description="description" imgURL="images/Head.jpg"/>
                 </div>
+                <div className="row">
+                    <Project title="Project" description="description" imgURL="images/Head.jpg"/>
+                    <Project title="Project" description="description" imgURL="images/Head.jpg"/>
+                    <Project title="Project" description="description" imgURL="images/Head.jpg"/>
+                </div>
             </div>
         </div>
     )
